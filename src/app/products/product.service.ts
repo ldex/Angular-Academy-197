@@ -3,13 +3,14 @@ import { Product } from './product.interface';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, delay, shareReplay, tap, map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  private baseUrl = 'https://storerestservice.azurewebsites.net/api/products/';
+  private baseUrl = environment.apiUrl;
   products$: Observable<Product[]>;
 
   constructor(private http: HttpClient) {
@@ -22,7 +23,8 @@ export class ProductService {
                       .get<Product[]>(this.baseUrl)
                       .pipe(
                         delay(1500),
-                        tap(console.table)
+                        tap(console.table),
+                        shareReplay()
                       );
   }
 }
